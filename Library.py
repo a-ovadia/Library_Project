@@ -1,4 +1,8 @@
+# TODO - Refactor Library program into a class[s]
+
 # Assume one-to-one relationship b/w title and isbn
+
+
 import datetime as dt
 
 library = {}
@@ -73,6 +77,26 @@ def is_name_valid_in_borrow(name):
         return True
     return False
 
+# Validate whether a particular user has checked out the specified book
+def has_checked_out_book(name, book_title):
+    # Return True or False
+    return
+
+# Overall status of a book -> how many copies available, how many are checked out, who has checked out
+def check_book_status(book_title):
+
+    return
+
+# Return who has borrow the specified book
+def get_borrower(book_title):
+
+    return
+
+# Return list of loans for a specified user
+def get_loans_for_user(name):
+    return borrowers.get(name, [])
+
+    return
 
 def library_main_menu():
     while True:
@@ -81,7 +105,7 @@ def library_main_menu():
         print("2. Search for a book")
         print("3. Show contents of library")
         print("4. Checkout a book")
-        print("5. Check you checked out books")
+        print("5. Check what books you have checked out")
         print("6. Quit program")
         user_input = input("Enter selection: ")
         if not user_input.isnumeric():
@@ -109,26 +133,24 @@ def library_main_menu():
             print(library)
 
         if user_input == "4":
-            book_to_checkout = input("Please enter the book which you would like to checkout: ")
+            book_to_checkout = input("Please enter the book which you would like to checkout: ").title()
             if not helper_search_if_book_exists(book_to_checkout):
                 print("The book you have searched for does not exist. Please try again")
             else:
-                name = input("Enter your name: ")
+                name = input("Enter your name: ").title()
                 length = input("Enter how many days you would like to have this book: ")
                 checkout_time = dt.datetime.now()
                 return_date = checkout_time + dt.timedelta(days=int(length))
+                checkout_book(name, book_to_checkout, checkout_time, return_date)
 
         if user_input == "5":
-            name = input("Enter your name: ")
-            # will need function to determine if name is valid
+            name = input("Enter your name: ").title()
+            # Validate name in borrowers dict
 
+            books = get_loans_for_user(name)
+            print(books)
 
         if user_input == "6":
             return False
 
 
-add_book_to_library("This test", "a", "1", 3)
-add_book_to_library("This testsd", "aa", "2", 3)
-add_book_to_library("This test", "a", "1", 3)
-add_book_to_library("This is my book", "Jason", 563262, 4)
-#library_main_menu()
