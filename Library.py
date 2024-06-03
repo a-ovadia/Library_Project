@@ -19,18 +19,17 @@ def add_book_to_library(title, author, isbn, count=1):
 
 
 # Search for a book in the Library
-# Search by exact title, author, or isbn
+# Search by by title, author, or isbn. Searches for partial matches
 def search_for_a_book(search):
-    search = search.title()
-    author_results = {}
-    book = library.get(search, False)
-    if book:
-        return {search: book}
-    for title, book_dict in library.items():
-        if book_dict.get("isbn") == search or book_dict.get("author") == search:
-            author_results[title] = book_dict
-    return author_results
-
+    search = search.lower()
+    search_results = []
+    for title, book_data in library.items():
+        if (search in title.lower()) or \
+           (search in book_data.get("author", "").lower().split()) or \
+           (search in book_data.get("isbn", "").split()):
+            search_results.append(title)
+    
+    return search_results    
 
 # return key of valid book
 # Search through title or isbn match only
@@ -89,8 +88,12 @@ def check_book_status(book_title):
 
 # Return who has borrow the specified book
 def get_borrower(book_title):
-
-    return
+    borrowers_list = []
+    for key, value in borrowers.items():
+        for checkout in value:
+            if checkout.get("title") == book_title:
+                borrowers_list.append(borrowers_list.append(key))
+    return borrowers_list
 
 # Return list of loans for a specified user
 def get_loans_for_user(name):
@@ -121,11 +124,10 @@ def library_main_menu():
             add_book_to_library(title, author, isbn, number)
 
         if user_input == "2":
-            input_result = get_user_search_for_book()
+            input_result = get_user_search_for_book().title()
             search_result = search_for_a_book(input_result)
             if search_result:
-                print("The following books match search: ")
-                print(search_result)
+                print(f"Your search returned a total of {len(search_result)} results \n {search_result}")
             else:
                 print("No books match your search\n")
 
@@ -148,9 +150,13 @@ def library_main_menu():
             # Validate name in borrowers dict
 
             books = get_loans_for_user(name)
-            print(books)
-
+            print(type(books))
+            if not books:
+                print("You currently do not have any books checked out")
+                continue
+            else: print(books)
         if user_input == "6":
-            return False
+            print(get_borrower("my book".title()))
+           # return False
 
 
