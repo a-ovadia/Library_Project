@@ -35,7 +35,7 @@ def search_for_a_book(search):
 # Search through title or isbn match only
 # Assume 1 to 1 relationship b/w title and isbn
 def helper_search_if_book_exists(search_title):
-    return library.get(search_title, False)
+    return library.get(search_title.title(), False)
  
 def get_user_search_for_book():
     return input("Search for a book: ")
@@ -63,10 +63,10 @@ def helper_checkout_book(book_title):
 
 # Assumes valid book and copies available
 def checkout_book(name, title, time_borrowed, return_date, book_returned=False):
-    record = borrowers.get(name, [])
-    record.append({"title": title, "time_borrowed": time_borrowed, "return_date": return_date, "book_returned": book_returned})
-    borrowers[name] = record
-    helper_checkout_book(title)
+    record = borrowers.get(name.title(), [])
+    record.append({"title": title.title(), "time_borrowed": time_borrowed, "return_date": return_date, "book_returned": book_returned})
+    borrowers[name.title()] = record
+    helper_checkout_book(title.title())
 
 
 def is_name_valid_in_borrow(name):
@@ -78,7 +78,11 @@ def is_name_valid_in_borrow(name):
 # Validate whether a particular user has checked out the specified book
 def has_checked_out_book(name, book_title):
     # Return True or False
-    return
+    book_title = book_title.title()
+    for loan in borrowers.get(name.title(), []):
+        if loan.get("title") == book_title:
+            return True
+    return False
 
 # Overall status of a book -> how many copies available, how many are checked out, who has checked out
 def check_book_status(book_title):
@@ -98,7 +102,25 @@ def get_borrower(book_title):
 def get_loans_for_user(name):
     return borrowers.get(name, [])
 
-    return
+
+def return_unique_books():
+    return len(library)
+
+def return_total_book_count():
+    count = 0
+    for entry in library.values():
+        count += entry["number_available"]
+        
+    return count
+
+def return_book_to_library(name, book_title):
+    loan = borrowers[name.title()]
+    for size in range(len(loan)):
+        if loan[size].get("title") == book_title.title():
+           # borrowers[name.title()][size].pop(loan[size])
+           del loan[size]
+           library[book_title.title()]["number_available"] += 1
+    
 
 def library_main_menu():
     while True:
@@ -108,7 +130,8 @@ def library_main_menu():
         print("3. Show contents of library")
         print("4. Checkout a book")
         print("5. Check what books you have checked out")
-        print("6. Quit program")
+        print("6. Return a book")
+        print("7. Quit program")
         user_input = input("Enter selection: ")
         if not user_input.isnumeric():
             print("You entered an incorrect value. Please try again\n")
@@ -154,7 +177,17 @@ def library_main_menu():
                 print("You currently do not have any books checked out")
                 continue
             else: print(books)
+
         if user_input == "6":
+            return_book = input("Please type in the book title that you are returning: ")
+            return_name = input("Please enter your name: ")
+            # Check if borrower has checked out book
+            if (has_checked_out_book(return_name.title(), return_book.title())):
+                return_book_to_library(return_name.title(), return_book.title())
+            else:
+                print("Error. Either you have not checked out that book or you have misspelled the book. Please try again")
+
+        if user_input == "7":
             print(get_borrower("my book".title()))
            # return False
 
