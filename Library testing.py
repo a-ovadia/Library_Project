@@ -1,9 +1,10 @@
 import Library
 import random
+import datetime as dt
 
 # This is an internal testing program to test the functionality of the Library program
 
-def populate_test_library(num_books=100):
+def populate_test_library(num_books=150):
     """Adds a specified number of test books to the library."""
     titles = [
         "The Hitchhiker's Guide to the Galaxy",
@@ -32,7 +33,6 @@ def populate_test_library(num_books=100):
         "Jane Eyre",
         "Frankenstein",
         "The Adventures of Tom Sawyer",
-        "The Picture of Dorian Gray",
         "The Three Musketeers",
         "Treasure Island",
         "Dracula",
@@ -50,66 +50,9 @@ def populate_test_library(num_books=100):
         "The Little Prince",
         "The Alchemist",
         "The Da Vinci Code",
-        "Harry Potter and the Philosopher's Stone",
-        "The Hunger Games",
-        "The Girl with the Dragon Tattoo",
-        "Fifty Shades of Grey",
-        "Gone Girl",
-        "The Martian",
-        "Ready Player One",
-        "A Game of Thrones",
-        "The Silent Patient",
-        "Where the Crawdads Sing",
-        "The Midnight Library",
-        "Normal People" ,
-        "The Godfather",
-        "The Lord of the Flies",
-        "The Picture of Dorian Gray",
-        "The Wind in the Willows",
-        "The Secret Garden",
-        "The Call of the Wild",
-        "Peter Pan",
-        "Anne of Green Gables",
-        "The Lion, the Witch and the Wardrobe",
-        "The Little Prince",
-        "The Alchemist",
-        "The Da Vinci Code",
-        "Harry Potter and the Goblet of Fire",
-        "The Hunger Games: Catching Fire",
-        "The Girl Who Played with Fire",
-        "Fifty Shades Darker",
-        "Gone Girl",
-        "The Martian",
-        "Artemis",
-        "A Court of Thorns and Roses",
-        "Red, White & Royal Blue",
-        "Circe",
-        "Six of Crows",
-        "The Song of Achilles",
-        "The Invisible Life of Addie LaRue",
-        "The Love Hypothesis",
-        "From Blood and Ash",
-        "A Good Girl's Guide to Murder",
-        "They Both Die at the End",
-        "The Seven Husbands of Evelyn Hugo",
-        "It Ends with Us",
-        "The Guest List",
-        "Verity",
-        "The House in the Cerulean Sea",
-        "The Invisible Life of Addie LaRue",
-        "The Midnight Library",
-        "Project Hail Mary",
-        "The Paris Apartment",
-        "Reminders of Him",
-        "The House Across the Lake",
-        "The Last Thing He Told Me",
-        "It Starts with Us",
-        "Run, Rose, Run",
-        "The Thursday Murder Club",
-        "The Bullet That Missed",
-        "The Love Hypothesis",
-        "The Paris Apartment",
-        "The House in the Cerulean Sea"
+        "The Kite Runner",
+        "A Thousand Splendid Suns",
+        "Life of Pi"
     ]
 
     authors = [
@@ -139,7 +82,6 @@ def populate_test_library(num_books=100):
         "Charlotte Brontë",
         "Mary Shelley",
         "Mark Twain",
-        "Oscar Wilde",
         "Alexandre Dumas",
         "Robert Louis Stevenson",
         "Bram Stoker",
@@ -157,71 +99,14 @@ def populate_test_library(num_books=100):
         "Antoine de Saint-Exupéry",
         "Paulo Coelho",
         "Dan Brown",
-        "J.K. Rowling",
-        "Suzanne Collins",
-        "Stieg Larsson",
-        "E L James",
-        "Gillian Flynn",
-        "Andy Weir",
-        "Ernest Cline",
-        "George R.R. Martin",
-        "Alex Michaelides",
-        "Delia Owens",
-        "Matt Haig",
-        "Sally Rooney",
-        "Mario Puzo",
-        "William Golding",
-        "Oscar Wilde",
-        "Kenneth Grahame",
-        "Frances Hodgson Burnett",
-        "Jack London",
-        "J.M. Barrie",
-        "L.M. Montgomery",
-        "C.S. Lewis",
-        "Antoine de Saint-Exupéry",
-        "Paulo Coelho",
-        "Dan Brown",
-        "J.K. Rowling",
-        "Suzanne Collins",
-        "Stieg Larsson",
-        "E L James",
-        "Gillian Flynn",
-        "Andy Weir",
-        "Andy Weir",
-        "Sarah J. Maas",
-        "Casey McQuiston",
-        "Madeline Miller",
-        "Leigh Bardugo",
-        "Madeline Miller",
-        "V.E. Schwab",
-        "Ali Hazelwood",
-        "Jennifer L. Armentrout",
-        "Holly Jackson",
-        "Adam Silvera",
-        "Taylor Jenkins Reid",
-        "Colleen Hoover",
-        "Lucy Foley",
-        "Colleen Hoover",
-        "T.J. Klune",
-        "V.E. Schwab",
-        "Matt Haig",
-        "Andy Weir",
-        "Lucy Foley",
-        "Colleen Hoover",
-        "Riley Sager",
-        "Laura Dave",
-        "Colleen Hoover",
-        "Dolly Parton and James Patterson",
-        "Richard Osman",
-        "Richard Osman",
-        "Ali Hazelwood",
-        "Lucy Foley",
-        "T.J. Klune"
+        "Khaled Hosseini",
+        "Khaled Hosseini",
+        "Yann Martel",
     ]
-
-    for i in range(num_books):
-        title = random.choice(titles)
-        author = authors[titles.index(title)] # ensure correct author for each title
+    print(f"Len titles is {len(titles)}")
+    for i in range(len(titles)):
+        title = titles[i]
+        author = authors[i] # ensure correct author for each title
         isbn = f"978-0-{random.randint(100000000, 999999999)}"  # Generate random ISBN
         count = random.randint(1, 10)  # Random number of copies (1-5)
         Library.add_book_to_library(title, author, isbn, count)
@@ -229,7 +114,16 @@ def populate_test_library(num_books=100):
 # Call the function to populate your library with 20 test books
 populate_test_library()
 
-Library.library_main_menu()
+
+print(Library.return_total_book_count())
+print(Library.return_unique_books())
+
+Library.checkout_book("Adam o", "life of pi", dt.datetime.now, dt.timedelta(200))
+print(f"the value is {Library.has_checked_out_book("Adam o", "life oF Pi")}")
+print(Library.borrowers)
+Library.return_book_to_library("Adam o", "Life of Pi")
+
+# Library.library_main_menu()
 
 
 
