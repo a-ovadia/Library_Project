@@ -1,6 +1,6 @@
-import Library
-import random
+import Library2 as Lib
 import datetime as dt
+import random
 
 # This is an internal testing program to test the functionality of the Library program
 
@@ -103,27 +103,20 @@ def populate_test_library(num_books=150):
         "Khaled Hosseini",
         "Yann Martel",
     ]
-    print(f"Len titles is {len(titles)}")
+
     for i in range(len(titles)):
         title = titles[i]
         author = authors[i] # ensure correct author for each title
         isbn = f"978-0-{random.randint(100000000, 999999999)}"  # Generate random ISBN
         count = random.randint(1, 10)  # Random number of copies (1-5)
-        Library.add_book_to_library(title, author, isbn, count)
+        Lib.add_book_to_library(title, author, isbn, count)
 
 # Call the function to populate your library with 20 test books
 populate_test_library()
 
 
-print(Library.return_total_book_count())
-print(Library.return_unique_books())
-
-Library.checkout_book("Adam o", "life of pi", dt.datetime.now, dt.timedelta(200))
-print(f"the value is {Library.has_checked_out_book("Adam o", "life oF Pi")}")
-print(Library.borrowers)
-Library.return_book_to_library("Adam o", "Life of Pi")
-
-# Library.library_main_menu()
 
 
 
+
+Lib.library_main_menu()
