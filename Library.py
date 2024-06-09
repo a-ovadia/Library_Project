@@ -1,194 +1,279 @@
-# TODO - Refactor Library program into a class[s]
-
-# Assume one-to-one relationship b/w title and isbn
-
-
 import datetime as dt
+import sys
 
+# Initialize Library and loan data structures
 library = {}
-borrowers = {}
+loan = {}
 
-
-def add_book_to_library(title, author, isbn, count=1):
-    # Need function to determine if book already exists (search function)
-    existing_book = helper_search_if_book_exists(title.title())
-    if existing_book:
-        library[title.title()]["number_available"] += count
-    else:
-        library[title.title()] = {"author": author.title(), "isbn": isbn, "number_available": count}
-
-
-# Search for a book in the Library
-# Search by by title, author, or isbn. Searches for partial matches
-def search_for_a_book(search):
-    search = search.lower()
-    search_results = []
-    for title, book_data in library.items():
-        if (search in title.lower()) or \
-           (search in book_data.get("author", "").lower().split()) or \
-           (search in book_data.get("isbn", "").split()):
-            search_results.append(title)
+# Function to add a book to the Library
+# Return True if successful, Otherwise False if error
+def add_book_to_library(book_title, book_author, 
+                        book_isbn, book_count = 1):
     
-    return search_results    
-
-# return key of valid book
-# Search through title or isbn match only
-# Assume 1 to 1 relationship b/w title and isbn
-def helper_search_if_book_exists(search_title):
-    return library.get(search_title.title(), False)
- 
-def get_user_search_for_book():
-    return input("Search for a book: ")
-
-
-# Assumes boot_title exists in dictionary
-def helper_search_number_of_books(book_title):
-    return library[book_title]["number_available"] > 0
-
-
-def helper_checkout_book(book_title):
-    # Check if book exists
-    if helper_search_if_book_exists(book_title.title()):
-
-        # Check number_available to make sure a book is available
-        if helper_search_number_of_books(book_title.title()):
-            # for now, just update library -> future work on logging checkouts in a dict
-            library[book_title.title()]["number_available"] -= 1
-        else:
-            print("The book exists, but there are no copies left. Please try tomorrow to see if any copies have "
-                  "been returned")
-    else:
-        print("No book exists by that title. Please check your spelling and try again")
-
-
-# Assumes valid book and copies available
-def checkout_book(name, title, time_borrowed, return_date, book_returned=False):
-    record = borrowers.get(name.title(), [])
-    record.append({"title": title.title(), "time_borrowed": time_borrowed, "return_date": return_date, "book_returned": book_returned})
-    borrowers[name.title()] = record
-    helper_checkout_book(title.title())
-
-
-def is_name_valid_in_borrow(name):
-    check = borrowers.get(name, False)
-    if check:
-        return True
-    return False
-
-# Validate whether a particular user has checked out the specified book
-def has_checked_out_book(name, book_title):
-    # Return True or False
+    # Set to Title format
     book_title = book_title.title()
-    for loan in borrowers.get(name.title(), []):
-        if loan.get("title") == book_title:
-            return True
+    book_author = book_author.title()
+
+    """
+        Input validation:
+            Book_title is string, book_title already exists
+            Book_author is string
+            return current book count if book exists
+    
+    """
+    valid_user_input = validate_book_title(book_title) and validate_book_author(book_author) and validate_book_isbn(book_isbn) and validate_book_count(book_count)
+
+    if valid_user_input:
+
+        """
+            Library validation
+                -> check if the book already exists
+                    -> increase book count if so
+                -> Otherwise add new book
+                We are assuming 1 to 1 match b/w title and isbn, so only search for title
+        """
+
+        book_exists = book_exists_in_library(book_title)
+
+        # Add book to library
+        if book_exists: library[book_title]["book_count"] += 1
+        else: library[book_title] = {"book author" : book_author, "book isbn" : book_isbn, "book count" : book_count, "checkout number": 0}
+        # return True for success
+        return True
+    # return False as book failed to be entered
     return False
 
-# Overall status of a book -> how many copies available, how many are checked out, who has checked out
-def check_book_status(book_title):
 
-    return
+# Return a list of search results that match (including substrings) book title, author, or isbn
+def search_library(search_term):
+    search_results = []
+    search_term = search_term.title()
+    # Iterate through the library to find matches
+    for book_title, book_data in library.items():
+        if search_term in book_title:
+            search_results.append(book_title)
+        elif search_term in book_data["book author"]:
+            search_results.append(book_title)
+        elif search_term in book_data["book isbn"]:
+            search_results.append(book_title)
 
-# Return who has borrow the specified book
-def get_borrower(book_title):
-    borrowers_list = []
-    for key, value in borrowers.items():
-        for checkout in value:
-            if checkout.get("title") == book_title:
-                borrowers_list.append(borrowers_list.append(key))
-    return borrowers_list
-
-# Return list of loans for a specified user
-def get_loans_for_user(name):
-    return borrowers.get(name, [])
-
-
-def return_unique_books():
-    return len(library)
-
-def return_total_book_count():
-    count = 0
-    for entry in library.values():
-        count += entry["number_available"]
-        
-    return count
-
-def return_book_to_library(name, book_title):
-    loan = borrowers[name.title()]
-    for size in range(len(loan)):
-        if loan[size].get("title") == book_title.title():
-           # borrowers[name.title()][size].pop(loan[size])
-           del loan[size]
-           library[book_title.title()]["number_available"] += 1
     
+    return search_results
+
+def print_library():
+    print("The following books are contained in the library")   
+    print("{:<50} {:<30} {:<20} {:<15} {:<15}".format("Title", "Author", "ISBN", "Copies Available", "Copies checked out"))
+    print("-" * 130)  # Separator line
+
+    for book_title, book_data in library.items():
+        print("{:<50} {:<30} {:<20} {:<15} {:<15}".format(book_title, book_data["book author"], book_data["book isbn"], book_data["book count"], book_data["checkout number"]))
+
+    return True
+
+
+def print_loans_data():
+    print("The following entries are contained in the Loan list")
+    print("{:<20} {:<30} {:<20} {:<15} {:<15}".format("Full Name", "Title", "Loan Date", "Due Date", "Loan Duration (days)"))
+    print("-" * 110)  # Separator line
+
+    for person, loan_list in loan.items():
+        for loan_data in loan_list:
+            print("{:<20} {:<30} {:<20} {:<15} {:<15}".format(person, loan_data["book title"], loan_data["loan date"].strftime("%b %d %Y"), loan_data["due date"].strftime("%b %d %Y"), loan_data["loan duration"]))
+
+    return True
+
+"""
+Error codes:
+ "1" -> multiple books match search
+"2" -> No book found
+"3" -> No copies available
+"4" -> Invalid name
+"5" -> invalid duration
+"""
+def loan_book_from_library(book_title, loan_fullname, loan_duration):
+    book_title = book_title.title()
+    loan_fullname = loan_fullname.title()
+    # Verify only 1 match for search
+    book_exists = search_library(book_title)
+    if book_exists == [] or len(book_exists) >1 :
+        # multiple matches found
+        return "1"
+    
+    # Verify book exists in library
+    elif not book_exists_in_library(book_title):
+        return "2"
+
+    # Verify there are available copies in Library
+    elif number_of_books_available(book_title) < 1:
+        return "3"
+    
+    # Verify loaner entered their name
+    elif not validate_fullname(loan_fullname):
+        return "4"
+
+    # Verify loan duration
+    elif not validate_loan_duration(loan_duration):
+        return "5"
+
+    loan_checkout_start_date = dt.datetime.now()
+    loan_checkout_end_date = loan_checkout_start_date + dt.timedelta(days=int(loan_duration))
+    # If loaner already has a book loaned out, append the new book to the tuple 
+    if loan_fullname in loan:
+        loan[loan_fullname].append({"book title" : book_title, "loan date" : loan_checkout_start_date, "due date" : loan_checkout_end_date, "loan duration" : loan_duration})
+
+    else:
+
+        # Add loan to the loan dictionary. Set as a dictionary of a tuple of dictionaries
+        loan[loan_fullname] = ([{"book title" : book_title, "loan date" : loan_checkout_start_date, "due date" : loan_checkout_end_date, "loan duration" : loan_duration}])
+
+    # Decrement books available by 1
+    library[book_title]["book count"] -= 1
+
+    # increment checked out books by one
+    library[book_title]["checkout number"] += 1
+
+    return True
+
+def check_loan_status(name):
+    name = name.title()
+    # Validate name has loaned a book
+    name_exists = name_exists_in_loan(name)
+    if (name_exists):
+        return loan[name]
+    return False
+
+# Assume name exists in loan dict
+def print_loan_status(name):
+    name = name.title()
+    print("The following entries are contained in the Loan list")
+    print("{:<20} {:<30} {:<20} {:<15} {:<15}".format("Full Name", "Title", "Loan Date", "Due Date", "Loan Duration (days)"))
+    print("-" * 110)  # Separator line
+    for loan_list in loan.values():
+        for loan_data in loan_list:
+            print("{:<20} {:<30} {:<20} {:<15} {:<15}".format(name, loan_data["book title"], loan_data["loan date"].strftime("%b %d %Y"), loan_data["due date"].strftime("%b %d %Y"), loan_data["loan duration"]))
+
+
+    return False
+
+"""
+
+Validation Functions
+
+"""
+# Validate book title is a string and alphanumerical
+def validate_book_title(book_title): return book_title.replace(" ", "").replace("-", "").replace("'", "").replace(",", "").replace(".", "").isalnum()
+
+# Validate book author is a string and only alphabetiocal characters
+def validate_book_author(book_author): return book_author.replace(" ", "").replace("-", "").replace("'", "").isalpha()
+
+# Validate book isbn is only comprised of dashes and numbers
+def validate_book_isbn(book_isbn): return book_isbn.replace("-", "").isnumeric()
+
+
+# Validate book count is a positive int
+def validate_book_count(book_count): 
+    try:
+        count = int(book_count)
+        return count > 0
+    except: return False
+
+
+def validate_fullname(name):
+    return name.replace(" ", "").replace("-", "").replace("'", "").isalpha()
+
+
+def validate_loan_duration(duration):
+    try:
+        duration = int(duration)
+        return 0 < duration <= 14
+    except: return False
+
+
+
+
+"""
+
+End Validation Functions
+
+"""
+
+
+
+def book_exists_in_library(book): return library.get(book, False)
+
+def number_of_books_available(book): return library[book].get("book count")
+
+def name_exists_in_loan(name):
+    name = name.title()
+    return loan.get(name, False)
+
 
 def library_main_menu():
     while True:
         print("Select options below")
         print("1. Add a book")
-        print("2. Search for a book")
-        print("3. Show contents of library")
-        print("4. Checkout a book")
-        print("5. Check what books you have checked out")
-        print("6. Return a book")
-        print("7. Quit program")
+        print("2. Search for a book: ")
+        print("3. Display all books in the Library: ")
+        print("4. Loan a book")
+        print("5. Check loan status")
+        print("6. Display all Loan data")
+        print("q. Quit program")
         user_input = input("Enter selection: ")
-        if not user_input.isnumeric():
-            print("You entered an incorrect value. Please try again\n")
+  
 
         if user_input == "1":
-            title = input("Please enter the title of the book: ")
-            author = input("Please enter the author: ")
-            isbn = input("Please enter the ISBN: ")
-            number = int(input("Please enter the number of copies: "))
+            book_title = input("Please enter the title of the book: ")
+            book_author = input("Please enter the author of the book ")
+            book_isbn = input("Please enter the book ISBN: ")
+            book_count = input("Please enter thenumber of copies: ")
+            if not add_book_to_library(book_title, book_author, book_isbn, book_count):
+                print("Error! You have entered an invalid book. Please try again")
+            else: print(f"Sucess! You have added {book_title} to the Library")
 
-            # Need to work on input validation
-            add_book_to_library(title, author, isbn, number)
+        # Search the library
+        elif user_input == "2":
+            search_book = input("Search for a book: ")
+            search_results = search_library(search_book)
+            if not search_results: print(f"No books in the library match your search term: {search_book}")
+            else: print(f"The following books match your search: {search_results}")
 
-        if user_input == "2":
-            input_result = get_user_search_for_book().title()
-            search_result = search_for_a_book(input_result)
-            if search_result:
-                print(f"Your search returned a total of {len(search_result)} results \n {search_result}")
-            else:
-                print("No books match your search\n")
-
-        if user_input == "3":
-            print(library)
-
-        if user_input == "4":
-            book_to_checkout = input("Please enter the book which you would like to checkout: ").title()
-            if not helper_search_if_book_exists(book_to_checkout):
-                print("The book you have searched for does not exist. Please try again")
-            else:
-                name = input("Enter your name: ").title()
-                length = input("Enter how many days you would like to have this book: ")
-                checkout_time = dt.datetime.now()
-                return_date = checkout_time + dt.timedelta(days=int(length))
-                checkout_book(name, book_to_checkout, checkout_time, return_date)
-
-        if user_input == "5":
-            name = input("Enter your name: ").title()
-            # Validate name in borrowers dict
-
-            books = get_loans_for_user(name)
-            print(type(books))
-            if not books:
-                print("You currently do not have any books checked out")
-                continue
-            else: print(books)
-
-        if user_input == "6":
-            return_book = input("Please type in the book title that you are returning: ")
-            return_name = input("Please enter your name: ")
-            # Check if borrower has checked out book
-            if (has_checked_out_book(return_name.title(), return_book.title())):
-                return_book_to_library(return_name.title(), return_book.title())
-            else:
-                print("Error. Either you have not checked out that book or you have misspelled the book. Please try again")
-
-        if user_input == "7":
-            print(get_borrower("my book".title()))
-           # return False
+    
+        # Print the Library
+        elif user_input == "3":
+            print_library()
 
 
+        # loan a book
+        elif user_input == "4":
+            # Gather required information to checkout a book
+            book = input("Enter the book title you would like to loan: ")
+            name = input("Enter you full name: ")
+            legnth = input("Enter how long you would like to loan the book [days]: ")
+            loan_success = loan_book_from_library(book, name, legnth)
+            if loan_success == True:
+                print(f"You successfully loaned {book} from the library for {legnth} days")
+            elif loan_success == "1":
+                print(f"Error, multiple books have been found for your search {book}. Please try again")
+            elif loan_success == "2":
+                print(f"Error. Your search for {book} is not found in the Library")
+            elif loan_success == "3":
+                print(f"There are no copies available for {book}. Please try again tomorrow.")
+            elif loan_success == "4":
+                print("You entered an invalid name. Please try again")
+            elif loan_success == "5":
+                print("You entered an invalid loan duration. Please be sure to select a value between 1-14 days")
+            else: print("Error. Something went wrong. Please try again later")
+
+
+        # Display Loan dict for a person
+        elif user_input == "5":
+            name = input("Enter your name: ")
+            name_exists = name_exists_in_loan(name)
+            if name_exists: print_loan_status(name)
+            else: print("Error. You do not have any books loaned or you have misspelled your name. Please try again")
+        # Display Loan dict
+        elif user_input == "6": print_loans_data()
+
+
+        elif user_input == "q":
+            sys.exit()
