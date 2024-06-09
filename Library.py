@@ -155,6 +155,19 @@ def print_loan_status(name):
 
     return False
 
+
+# Return loaned book
+def return_loaned_book(loaner_name, loaner_book):
+    # First check if loaner name and the book match the loan dict
+    if check_loan_status(loaner_name):
+        loans = loan[loaner_name]
+        for loan_data in loans:
+            if loaner_book == loan_data["book title"]:
+                loans.remove(loan_data)
+                library[loaner_book]["book count"] += 1
+                library[loaner_book]["checkout number"] -= 1
+
+
 """
 
 Validation Functions
@@ -217,6 +230,7 @@ def library_main_menu():
         print("4. Loan a book")
         print("5. Check loan status")
         print("6. Display all Loan data")
+        print("7. Return loaned book")
         print("q. Quit program")
         user_input = input("Enter selection: ")
   
@@ -271,9 +285,14 @@ def library_main_menu():
             name_exists = name_exists_in_loan(name)
             if name_exists: print_loan_status(name)
             else: print("Error. You do not have any books loaned or you have misspelled your name. Please try again")
+       
         # Display Loan dict
         elif user_input == "6": print_loans_data()
-
+        
+        elif user_input == "7":
+            loaner_name = input("Please enter your name: ").title()
+            loaner_book = input("Please enter the book you are returning: ").title()
+            return_loaned_book(loaner_name, loaner_book)
 
         elif user_input == "q":
             sys.exit()
