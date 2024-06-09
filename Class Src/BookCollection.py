@@ -9,6 +9,3 @@ class BookCollection:
         self._count = count
         self._loaned = loaned
         self._available = self._count - self._loaned
-
-
-    d
