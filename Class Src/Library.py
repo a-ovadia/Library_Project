@@ -16,6 +16,9 @@ class Library:
         self._book_collection = book_collection
         
 
+    def get_book_collection(self):
+        return self._book_collection
+    
     def validate_book_collections(self, book_collections):
         """
         Helper function to validate input is a list of type BookCollection
@@ -101,3 +104,7 @@ class Library:
                 loan_book.remove_book(loan_book)
                 return True
         raise ValueError("Book not found in the Collection")
+    
+    def print_library(self):
+        for book_collection in self._book_collection:
+            print(book_collection)
