@@ -31,7 +31,7 @@ class LibraryManager:
             if selection == "2":
                 search_term = input("Enter search term: ")
                 search_by = input("Enter filter to search by: Enter 't' for Title, 'a' for author, 'i' for isbn, 'd' for publication date, 'g' for genre, 'p' for publisher")
-                print(self.search_library(search_term, search_by))
+                self.print_book_collection(self.search_library(search_term, search_by))
 
     def view_all_books(self):
         self._library.print_library()
