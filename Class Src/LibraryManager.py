@@ -38,6 +38,7 @@ class LibraryManager:
         result_list = None
         if not search_term:
             raise ValueError("The search term cannot be empty")
+        search_term = search_term.lower().strip()
         
         if search_option.lower() == "t":
             result_list = self.helper_search_library_opt_t(search_term)
@@ -63,7 +64,7 @@ class LibraryManager:
         result_list = []
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
-            if search_term.lower() in book.get_title().lower():
+            if search_term in book.get_title().lower():
                 result_list.append(book)
         return result_list
 
@@ -71,7 +72,7 @@ class LibraryManager:
         result_list = []
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
-            if search_term.lower() in book.get_isbn().lower():
+            if search_term in book.get_isbn().lower():
                 result_list.append(book)
         return result_list
     
@@ -79,7 +80,7 @@ class LibraryManager:
         result_list = []
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
-            if search_term.lower() in book.get_author().lower():
+            if search_term in book.get_author().lower():
                 result_list.append(book)
         return result_list
     
@@ -87,7 +88,7 @@ class LibraryManager:
         result_list = []
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
-            if search_term.lower() in book.get_publication_date().lower():
+            if search_term in book.get_publication_date().lower():
                 result_list.append(book)
         return result_list
     
@@ -95,7 +96,7 @@ class LibraryManager:
         result_list = []
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
-            if search_term.lower() in book.get_genre().lower():
+            if search_term in book.get_genre().lower():
                 result_list.append(book)
         return result_list        
 
@@ -103,6 +104,6 @@ class LibraryManager:
         result_list = []
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
-            if search_term.lower() in book.get_publisher().lower():
+            if search_term in book.get_publisher().lower():
                 result_list.append(book)
         return result_list        
