@@ -13,6 +13,10 @@ class BookCollection:
             total_count (int): Total number of books
             loaned (int): Number of books loaned
         """
+        if not isinstance(total_count, int):
+            raise ValueError("total count must be an int")
+        if not isinstance(loaned, int):
+            raise ValueError("loaned must be an int")
         self._book = book
         self._total_count = total_count
         self._number_loaned = loaned
