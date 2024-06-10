@@ -16,6 +16,9 @@ class LibraryManager:
 
     def get_library(self):
         return self._library
+    
+    def print_book_collection(self, book_collection):
+        self._library.print_book_collection(book_collection)
 
     def main_menu(self):
         print("Main Menu")
@@ -65,7 +68,7 @@ class LibraryManager:
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
             if search_term in book.get_title().lower():
-                result_list.append(book)
+                result_list.append(book_collection)
         return result_list
 
     def helper_search_library_opt_i(self, search_term):
@@ -73,7 +76,7 @@ class LibraryManager:
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
             if search_term in book.get_isbn().lower():
-                result_list.append(book)
+                result_list.append(book_collection)
         return result_list
     
     def helper_search_library_opt_a(self, search_term):
@@ -81,7 +84,7 @@ class LibraryManager:
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
             if search_term in book.get_author().lower():
-                result_list.append(book)
+                result_list.append(book_collection)
         return result_list
     
     def helper_search_library_opt_d(self, search_term):
@@ -89,7 +92,7 @@ class LibraryManager:
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
             if search_term in book.get_publication_date().lower():
-                result_list.append(book)
+                result_list.append(book_collection)
         return result_list
     
     def helper_search_library_opt_g(self, search_term):
@@ -97,7 +100,7 @@ class LibraryManager:
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
             if search_term in book.get_genre().lower():
-                result_list.append(book)
+                result_list.append(book_collection)
         return result_list        
 
     def helper_search_library_opt_p(self, search_term):
@@ -105,5 +108,5 @@ class LibraryManager:
         for book_collection in self._library._book_collection:
             book = book_collection.get_book()
             if search_term in book.get_publisher().lower():
-                result_list.append(book)
+                result_list.append(book_collection)
         return result_list        

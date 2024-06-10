@@ -108,3 +108,12 @@ class Library:
     def print_library(self):
         for book_collection in self._book_collection:
             print(book_collection)
+
+    def print_book_collection(self, book_collections):
+        print("{:<30} {:<20} {:<15} {:<15} {:<15}".format("Title", "Author", "Genre", "Total Count", "Loaned"))
+        for book_collection in book_collections:
+            book = book_collection.get_book()
+            print("{:<30} {:<20} {:<15} {:<15} {:<15}".format(
+                        book.get_title(), book.get_author(), book.get_genre(), 
+                        book_collection.get_total_count(), book_collection.get_number_loaned()
+                    ))
