@@ -10,22 +10,38 @@ class Library:
         Used to manage a list of BookCollection objects
 
         Args:
-            book_collection (BookCollection) - A BookCollection to append to the library list
+            book_collection list[BookCollection] - A BookCollection to append to the library list
         """
-        self._book_collection = [book_collection]
+        self.validate_book_collections(book_collection)
+        self._book_collection = book_collection
         
 
-    def add_book_collections(self, book_collection_list):
+    def validate_book_collections(self, book_collections):
+        """
+        Helper function to validate input is a list of type BookCollection
+
+        Args:
+            book_collection - Determine if this entry is a list of BookCollection objs
+        """
+        if not isinstance(book_collections, list):
+            raise ValueError("Expected a list of BookCollection objects")
+        for item in book_collections:
+            if not isinstance(item, BookCollection):
+                raise ValueError("All items in the list must be instances of BookCollection")
+
+
+
+    def add_book_collections(self, book_collection):
         """
         Add a BookCollection to the Library
 
         Args:
             book_collection_list (BookCollection) - BookCollection to add
         """
-        if not isinstance(book_collection_list, BookCollection):
+        if not isinstance(book_collection, BookCollection):
             raise ValueError("Error. Library can only add BookCollection objs")
-        for book_collection in book_collection_list:
-            self._book_collection.append(book_collection)
+      
+        self._book_collection.append(book_collection)
 
     def is_book_in_collection(self, book : Book):
         """
@@ -52,10 +68,11 @@ class Library:
             loan_person (Person) - Who is loaning the book
         
         """
+        if not (isinstance(loan_person, Person) and isinstance(loan_book, Book)):
+            raise ValueError("Loan person and/or loan book have not been entered in the correct format")
         if not self.is_book_in_collection(loan_book):
             raise ValueError("Error. The book is not in the library")
-        if not isinstance(loan_person, Person):
-            raise ValueError("Error the requested loaner must be a Person Obj")
+
         for book_collection in self._book_collection:
             if book_collection.get_book() == loan_book:
                 if book_collection.loan_book(1):
@@ -73,10 +90,11 @@ class Library:
             loan_book (Book) - The book that was loaned
             loan_person (Person) - The person who loaned the book
         """
+        if not (isinstance(loan_person, Person) and isinstance(loan_book, Book)):
+            raise ValueError("Loan person and/or loan book have not been entered in the correct format")
         if loan_book not in self._book_collection:
             raise ValueError("Error. The book is not in the library")
-        if not isinstance(loan_person, Person):
-            raise ValueError("Error the requested loaner must be a Person Obj")
+        
         for book in self._book_collection:
             if book.get_book() == loan_book:
                 book.return_book(1)
