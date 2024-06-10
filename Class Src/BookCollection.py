@@ -4,8 +4,8 @@ from Books import Book
 class BookCollection:
 
 
-    def __init__(self, book, number_available = 1, loaned = 0 ):
+    def __init__(self, book, total_count = 1, loaned = 0 ):
         self._book = book
-        self._number_available = number_available
+        self._total_count = total_count
         self._number_loaned = loaned
-        self._available = self._count - self._loaned
+        self._number_available = self._total_count - self._number_loaned
