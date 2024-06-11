@@ -6,7 +6,7 @@ class Person:
     def __init__(self, name, library_card = None, genre = "", books = None, email = None, phone = None):
         self._name = name
         self._favorite_genre = genre
-        self._loaned_books = [books]
+        self._loaned_books = books if books is not None else []
         self._library_card = library_card
         self._email = email
         self._phone = phone
