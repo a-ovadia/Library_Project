@@ -1,3 +1,5 @@
+import PrintOut
+
 """
 Todo: Start Person addition
 - need to be able to check a person for a valid library card
@@ -204,4 +206,5 @@ class LibraryManager:
 
 
     def print_loaner_list(self):
-        print(self._person)
+        #print(self._person)
+        PrintOut.print_loaned_books(self._person)
