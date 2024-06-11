@@ -11,6 +11,11 @@ class Person:
         self._email = email
         self._phone = phone
 
+    def __repr__(self):
+        return (f"Person(name={self._name!r}, library_card={self._library_card!r}, "
+                f"favorite_genre={self._favorite_genre!r}, loaned_books={self._loaned_books!r}, "
+                f"email={self._email!r}, phone={self._phone!r})")
+    
     # Define setters
     def set_name(self, name):
         self._name = name
@@ -54,3 +59,10 @@ class Person:
     
     def get_phone(self):
         return self._phone
+    
+    # Returns True if the person has loaned the book, False otherwise
+    def has_loaned_book(self, book : Book):
+        for item in self._loaned_books:
+            if item.get_title().lower == book.get_title().lower():
+                return True
+        return False

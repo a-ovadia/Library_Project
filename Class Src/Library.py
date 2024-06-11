@@ -110,6 +110,10 @@ class Library:
             print(book_collection)
 
     def print_book_collection(self, book_collections):
+        if not book_collections:
+            print("The Collection is Empty")
+            return False
+        
         print("{:<30} {:<20} {:<15} {:<15} {:<15}".format("Title", "Author", "Genre", "Total Count", "Loaned"))
         for book_collection in book_collections:
             book = book_collection.get_book()
@@ -117,3 +121,15 @@ class Library:
                         book.get_title(), book.get_author(), book.get_genre(), 
                         book_collection.get_total_count(), book_collection.get_number_loaned()
                     ))
+    
+    def is_book_available(self, book_title):
+        for book_collect in self._book_collection:
+            if book_title.lower() == book_collect.get_book().get_title().lower():
+                if book_collect.number_available > 0:
+                    return True
+        return False
+    
+    def get_book(self, book_title):
+        for item in range(self._book_collection):
+            if item.get_title().lower() == book_title.lower():
+                return item

@@ -3,6 +3,7 @@ from BookCollection import BookCollection
 from Library import Library
 from LibraryManager import LibraryManager
 from Person import Person
+from LibraryCard import LibraryCard
 
 # List of fake books
 books = [
@@ -27,11 +28,21 @@ book_collections = [
     BookCollection(books[4], total_count=2),
     BookCollection(books[5], total_count=8),
     BookCollection(books[6], total_count=7),
-    BookCollection(books[7], total_count=1),
+    BookCollection(books[7], total_count=0),
     BookCollection(books[8], total_count=9),
     BookCollection(books[9], total_count=10)
 ]
 
 library = Library(book_collections)
 library_manager = LibraryManager(library)
-library_manager.main_menu()
+#library_manager.main_menu()
+#library_manager.print_book_collection(book_collections)
+
+# card = LibraryCard()
+# print(card)
+# me = Person("adam")
+# me.add_library_card(card)
+# print(me.get_library_card())
+
+library_manager.loan_book("war and peace")
+library_manager.print_loaner_list()
