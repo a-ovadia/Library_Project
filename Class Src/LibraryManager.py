@@ -1,3 +1,12 @@
+"""
+Todo: Start Person addition
+- need to be able to check a person for a valid library card
+  (number exists and not expired)
+- Be able to issue a new library card
+
+"""
+
+
 from Library import Library
 from Books import Book
 from Person import Person
@@ -21,14 +30,19 @@ class LibraryManager:
         self._library.print_book_collection(book_collection)
 
     def main_menu(self):
-        print("Main Menu")
-        print("1. View all books in the library")
-        print("2. Search Library")
-        selection = input("Enter Selection choice: ")
-
         while True:
+            print("Main Menu")
+            print("1. View all books in the library")
+            print("2. Search Library")
+            selection = input("Enter Selection choice: ")
 
-            if selection == "2":
+        
+
+            if selection == "1":
+                self.print_book_collection(self._library.get_book_collection())
+
+
+            elif selection == "2":
                 search_term = input("Enter search term: ")
                 search_by = input("Enter filter to search by: Enter 't' for Title, 'a' for author, 'i' for isbn, 'd' for publication date, 'g' for genre, 'p' for publisher")
                 self.print_book_collection(self.search_library(search_term, search_by))
