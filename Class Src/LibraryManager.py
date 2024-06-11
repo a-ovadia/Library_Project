@@ -35,7 +35,7 @@ class LibraryManager:
         return self._library.is_book_available(book_title)
     
     def is_person_in_library(self, person_name):
-        return person_name.lower() in (name.lower() for name in self._person)    
+        return person_name.lower() in (name.get_name().lower() for name in self._person)    
     
     def loan_book(self, book_title):
         # Check that book exists and is available
@@ -54,7 +54,7 @@ class LibraryManager:
             # check if person already loaned this book 
             person = None
             
-            for item in range(self._person):
+            for item in range(len(self._person)):
                 if loan_person_name.lower() == self._person[item].get_name().lower():
                     person = self._person[item]
                     
@@ -62,7 +62,10 @@ class LibraryManager:
                     if not person.has_loaned_book(book_loanc):
                         # loan book
                         return self.helper_loan_book(book_loanc, person)
-
+                    else:
+                        print("Error. You already have loaned this book")
+                        return False
+                    
         # Create new person if loaner is not in db
         new_person = self.create_new_person(loan_person_name)
         self._person.append(new_person)
@@ -93,6 +96,7 @@ class LibraryManager:
             print("2. Search Library")
             print("3. Check if a book is available")
             print("4. Loan a book")
+            print("5. Check library loan status")
             selection = input("Enter Selection choice: ")
 
         
@@ -115,6 +119,9 @@ class LibraryManager:
                 book_title = input("Enter the book title you would like to loan: ").lower()
                 self.loan_book(book_title)
                 
+            
+            elif selection == "5":
+                self.print_loaner_list()
 
 
     def view_all_books(self):

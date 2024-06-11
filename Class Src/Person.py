@@ -61,8 +61,8 @@ class Person:
         return self._phone
     
     # Returns True if the person has loaned the book, False otherwise
-    def has_loaned_book(self, book : Book):
+    def has_loaned_book(self, bookc):
         for item in self._loaned_books:
-            if item.get_title().lower == book.get_title().lower():
+            if item.get_title().lower() == bookc.get_book().get_title().lower():
                 return True
         return False
