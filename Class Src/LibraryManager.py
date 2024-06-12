@@ -1,4 +1,6 @@
 import PrintOut
+from LibraryCard import LibraryCard
+from datetime import datetime
 
 """
 Todo: Start Person addition
@@ -60,6 +62,14 @@ class LibraryManager:
                 if loan_person_name.lower() == self._person[item].get_name().lower():
                     person = self._person[item]
                     
+                    # If person does not have a Library card, issue one
+                    if not person.get_library_card():
+                        person.add_library_card(LibraryCard())   
+
+                    # Check expiration date of library card
+                    elif datetime.now() >= person.get_library_card().expiration_date:
+                        print("Need to renew library card") # Will implement later
+
                     # if person has not loaned the book before
                     if not person.has_loaned_book(book_loanc):
                         # loan book
