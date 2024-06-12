@@ -53,7 +53,7 @@ class LibraryManager:
             print("Error. The requested book is not available")
             return False
         
-        loan_person_name = input("Enter your name: ")
+        loan_person_name = input("Enter your name: ").lower()
         book_loanc = None
         for book in self._library._book_collection:
             if book.get_book().get_title().lower() == book_title:
@@ -65,7 +65,7 @@ class LibraryManager:
             person = None
             
             for item in range(len(self._person)):
-                if loan_person_name.lower() == self._person[item].get_name().lower():
+                if loan_person_name == self._person[item].get_name().lower():
                     person = self._person[item]
                     
                     # If person does not have a Library card, issue one
@@ -86,14 +86,28 @@ class LibraryManager:
                     
         # Create new person if loaner is not in db
         new_person = self.create_new_person(loan_person_name)
+        if new_person == False:
+            print("Error creating user account")
+            return False
         self._person.append(new_person)
         self.helper_loan_book(book_loanc, new_person)
         return True
 
     def create_new_person(self, name):
-        genre = input("Enter favorite genre: ")
-        email = input("Enter your email address: ")
+        # Get user input
+        genre = input("Enter favorite genre: ").lower()
+        email = input("Enter your email address: ").lower()
+
+        # Validate user input
+        if not email:
+            print("You did not enter a valid email address")
+            return False
         phone = input("Enter your phone number: ")
+        if not phone:
+            print("You did not enter a valid phone number")
+            return False
+
+        # Create a new Person class and return the Person obj
         new_person = Person(name.title(), genre=genre, email=email, phone=phone)
         lc = LibraryCard()
         new_person.add_library_card(lc)
@@ -106,12 +120,6 @@ class LibraryManager:
         book.set_number_loaned(book.get_number_loaned() + 1)
         person._loaned_books.append(book.get_book())
         return True
-
-    
-
-    def view_all_books(self):
-        self._library.print_library()
-
     
     def search_library(self, search_term, search_option = "t"):
         result_list = None
@@ -141,7 +149,7 @@ class LibraryManager:
     # Helper functions for search
     def helper_search_library_opt_t(self, search_term):
         result_list = []
-        for book_collection in self._library._book_collection:
+        for book_collection in self.get_library().get_book_collection():
             book = book_collection.get_book()
             if search_term in book.get_title().lower():
                 result_list.append(book_collection)
@@ -149,7 +157,7 @@ class LibraryManager:
 
     def helper_search_library_opt_i(self, search_term):
         result_list = []
-        for book_collection in self._library._book_collection:
+        for book_collection in self.get_library().get_book_collection():
             book = book_collection.get_book()
             if search_term in book.get_isbn().lower():
                 result_list.append(book_collection)
@@ -157,7 +165,7 @@ class LibraryManager:
     
     def helper_search_library_opt_a(self, search_term):
         result_list = []
-        for book_collection in self._library._book_collection:
+        for book_collection in self.get_library().get_book_collection():
             book = book_collection.get_book()
             if search_term in book.get_author().lower():
                 result_list.append(book_collection)
@@ -165,7 +173,7 @@ class LibraryManager:
     
     def helper_search_library_opt_d(self, search_term):
         result_list = []
-        for book_collection in self._library._book_collection:
+        for book_collection in self.get_library().get_book_collection():
             book = book_collection.get_book()
             if search_term in book.get_publication_date().lower():
                 result_list.append(book_collection)
@@ -173,7 +181,7 @@ class LibraryManager:
     
     def helper_search_library_opt_g(self, search_term):
         result_list = []
-        for book_collection in self._library._book_collection:
+        for book_collection in self.get_library().get_book_collection():
             book = book_collection.get_book()
             if search_term in book.get_genre().lower():
                 result_list.append(book_collection)
@@ -181,7 +189,7 @@ class LibraryManager:
 
     def helper_search_library_opt_p(self, search_term):
         result_list = []
-        for book_collection in self._library._book_collection:
+        for book_collection in self.get_library().get_book_collection():
             book = book_collection.get_book()
             if search_term in book.get_publisher().lower():
                 result_list.append(book_collection)
