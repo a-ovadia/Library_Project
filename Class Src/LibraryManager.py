@@ -114,6 +114,7 @@ class LibraryManager:
             print("2. Check if a book is available")
             print("3. Loan a book")
             print("4. Print Status Menu")
+            print("5. Return book")
        
             selection = input("Enter Selection choice: ")
 
@@ -167,6 +168,13 @@ class LibraryManager:
 
                     elif print_selection == "6":
                         PrintOut.print_overdue_books(self)
+
+            elif selection == "5":
+                name = input("Enter your name: ").lower()
+                for person in range(len(self.get_person())):
+                    if name.lower() == self._person[person].get_name().lower():
+                        PrintOut.print_loans_for_person(self._person[person])
+
 
     def view_all_books(self):
         self._library.print_library()
