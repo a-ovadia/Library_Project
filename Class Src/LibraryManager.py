@@ -99,6 +99,7 @@ class LibraryManager:
             print("3. Check if a book is available")
             print("4. Loan a book")
             print("5. Check library loan status")
+            print("6. Check single loan status")
             selection = input("Enter Selection choice: ")
 
         
@@ -124,6 +125,12 @@ class LibraryManager:
             
             elif selection == "5":
                 self.print_loaner_list()
+
+            elif selection == "6":
+                name = input("Please enter your name: ")
+                for entry in self._person:
+                    if entry.get_name().lower() == name.lower():
+                        PrintOut.print_loans_for_person(entry)
 
 
     def view_all_books(self):
