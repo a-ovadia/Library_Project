@@ -27,9 +27,15 @@ class LibraryManager:
 
     def set_library(self, library):
         self._library = library
+    
+    def set_person(self, person):
+        self._person = person
 
     def get_library(self):
         return self._library
+    
+    def get_person(self):
+        return self._person
     
     def print_book_collection(self, book_collection):
         self._library.print_book_collection(book_collection)
@@ -104,44 +110,63 @@ class LibraryManager:
     def main_menu(self):
         while True:
             print("Main Menu")
-            print("1. View all books in the library")
-            print("2. Search Library")
-            print("3. Check if a book is available")
-            print("4. Loan a book")
-            print("5. Check library loan status")
-            print("6. Check single loan status")
+            print("1. Search Library")
+            print("2. Check if a book is available")
+            print("3. Loan a book")
+            print("4. Print Status Menu")
+       
             selection = input("Enter Selection choice: ")
 
-        
-            # Print out entire contents of Library
-            if selection == "1":
-                self.print_book_collection(self._library.get_book_collection())
+
 
             # Search Library
-            elif selection == "2":
+            if selection == "1":
                 search_term = input("Enter search term: ")
                 search_by = input("Enter filter to search by: Enter 't' for Title, 'a' for author, 'i' for isbn, 'd' for publication date, 'g' for genre, 'p' for publisher")
                 self.print_book_collection(self.search_library(search_term, search_by))
 
             
-            elif selection == "3":
+            elif selection == "2":
                 book_title = input("Enter the title of the book: ")
                 print(self.is_book_available(book_title))
 
-            elif selection == "4":
+            elif selection == "3":
                 book_title = input("Enter the book title you would like to loan: ").lower()
                 self.loan_book(book_title)
                 
             
-            elif selection == "5":
-                self.print_loaner_list()
+            elif selection == "4":
+                print_selection = None
+                while print_selection != "c":
+                    print("1. Print loan books")
+                    print("2. Print loans for a person")
+                    print("3. Print all books")
+                    print("4. Print only available books")
+                    print("5. Print person list")
+                    print("6. Print overdue books")
+                    print("c: MAIN MENU")
+                    print_selection = input("Enter selection: ").lower()
+                
+                    if print_selection == "1":
+                        PrintOut.print_loaned_books(self.get_person())
+                    
+                    elif print_selection == "2":
+                        name = input("Please enter your name: ")
+                        for entry in self._person:
+                            if entry.get_name().lower() == name.lower():
+                                PrintOut.print_loans_for_person(entry)
 
-            elif selection == "6":
-                name = input("Please enter your name: ")
-                for entry in self._person:
-                    if entry.get_name().lower() == name.lower():
-                        PrintOut.print_loans_for_person(entry)
+                    elif print_selection == "3":
+                        PrintOut.print_all_books(self)
 
+                    elif print_selection == "4":
+                        PrintOut.print_available_books(self)
+
+                    elif print_selection == "5":
+                        PrintOut.print_person_list(self)
+
+                    elif print_selection == "6":
+                        PrintOut.print_overdue_books(self)
 
     def view_all_books(self):
         self._library.print_library()
