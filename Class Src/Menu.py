@@ -15,17 +15,30 @@ def main_menu(LibMan : LibraryManager):
 
             # Search Library
             if selection == "1":
-                search_term = input("Enter search term: ")
-                search_by = input("Enter filter to search by: Enter 't' for Title, 'a' for author, 'i' for isbn, 'd' for publication date, 'g' for genre, 'p' for publisher")
+                search_term = input("Enter search term: ").lower()
+                if not search_term:
+                    print("Error. Please enter a search term")
+                    continue
+                valid_search_term = ["t", "a", "i", "d", "g", "p"]
+                search_by = input("Enter filter to search by: Enter 't' for Title, 'a' for author, 'i' for isbn, 'd' for publication date, 'g' for genre, 'p' for publisher").strip().lower()
+                if search_by not in valid_search_term:
+                    print("Error. You did not enter a valid search filter")
+                    continue
                 LibMan.print_book_collection(LibMan.search_library(search_term, search_by))
 
             
             elif selection == "2":
-                book_title = input("Enter the title of the book: ")
+                book_title = input("Enter the title of the book: ").lower()
+                if not book_title:
+                    print("Error. You did not enter a book title to search")
+                    continue
                 print(LibMan.is_book_available(book_title))
 
             elif selection == "3":
                 book_title = input("Enter the book title you would like to loan: ").lower()
+                if not book_title:
+                    print("Error. You did not enter a book title to search")
+                    continue
                 LibMan.loan_book(book_title)
                 
             
@@ -39,15 +52,18 @@ def main_menu(LibMan : LibraryManager):
                     print("5. Print person list")
                     print("6. Print overdue books")
                     print("c: MAIN MENU")
-                    print_selection = input("Enter selection: ").lower()
+                    print_selection = input("Enter selection: ").strip().lower()
                 
                     if print_selection == "1":
                         PrintOut.print_loaned_books(LibMan.get_person())
                     
                     elif print_selection == "2":
-                        name = input("Please enter your name: ")
+                        name = input("Please enter your name: ").lower()
+                        if not name:
+                            print("Error. You have not entered your name")
+                            continue
                         for entry in LibMan._person:
-                            if entry.get_name().lower() == name.lower():
+                            if entry.get_name().lower() == name:
                                 PrintOut.print_loans_for_person(entry)
 
                     elif print_selection == "3":
@@ -64,6 +80,9 @@ def main_menu(LibMan : LibraryManager):
 
             elif selection == "5":
                 name = input("Enter your name: ").lower()
+                if not name:
+                    print("Error. You have not entered a valid name")
+                    continue
                 for person in range(len(LibMan.get_person())):
                     if name.lower() == LibMan._person[person].get_name().lower():
                         PrintOut.print_loans_for_person(LibMan._person[person])
