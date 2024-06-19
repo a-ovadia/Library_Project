@@ -83,6 +83,14 @@ def main_menu(LibMan : LibraryManager):
                 if not name:
                     print("Error. You have not entered a valid name")
                     continue
-                for person in range(len(LibMan.get_person())):
-                    if name.lower() == LibMan._person[person].get_name().lower():
-                        PrintOut.print_loans_for_person(LibMan._person[person])
+                person_list = LibMan.get_person()
+                loan_person = None
+                for person in person_list:
+                    if name.lower() == person.get_name().lower():
+                        PrintOut.print_loans_for_person(person)
+                        loan_person = person
+                book = input("Enter book title: ").lower()
+                book_obj = LibMan.get_library().get_book(book)
+                if book_obj:
+                    print("Returning book")
+                LibMan.return_loaned_book(loan_person, book_obj)

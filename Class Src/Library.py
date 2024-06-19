@@ -62,7 +62,7 @@ class Library:
                 return True
         return False
 
-    def loan_book(self, loan_book : Book, loan_person : Person):
+    def loan_book(self, loan_book : BookCollection, loan_person : Person):
         """
         Function to loan a book from the Library
         
@@ -71,10 +71,6 @@ class Library:
             loan_person (Person) - Who is loaning the book
         
         """
-        if not (isinstance(loan_person, Person) and isinstance(loan_book, Book)):
-            raise ValueError("Loan person and/or loan book have not been entered in the correct format")
-        if not self.is_book_in_collection(loan_book):
-            raise ValueError("Error. The book is not in the library")
 
         for book_collection in self._book_collection:
             if book_collection.get_book() == loan_book:
@@ -83,27 +79,27 @@ class Library:
                     return True
                 else:
                     raise ValueError("Book is not available")
-        raise ValueError("The book is not found in the collection")
+        #raise ValueError("The book is not found in the collection")
     
     def return_book(self, loan_book, loan_person):
         """
-        Function to returna loaned book back to the Library
+        Function to return a loaned book back to the Library
 
         Args:
             loan_book (Book) - The book that was loaned
             loan_person (Person) - The person who loaned the book
         """
-        if not (isinstance(loan_person, Person) and isinstance(loan_book, Book)):
-            raise ValueError("Loan person and/or loan book have not been entered in the correct format")
-        if loan_book not in self._book_collection:
-            raise ValueError("Error. The book is not in the library")
+        # if not (isinstance(loan_person, Person) and isinstance(loan_book, BookCollection)):
+        #     raise ValueError("Loan person and/or loan book have not been entered in the correct format")
+        # if loan_book not in self._book_collection:
+        #     raise ValueError("Error. The book is not in the library")
         
         for book in self._book_collection:
             if book.get_book() == loan_book:
                 book.return_book(1)
                 loan_book.remove_book(loan_book)
                 return True
-        raise ValueError("Book not found in the Collection")
+      #  raise ValueError("Book not found in the Collection")
     
     def print_library(self):
         for book_collection in self._book_collection:
@@ -130,6 +126,6 @@ class Library:
         return False
     
     def get_book(self, book_title):
-        for item in range(self._book_collection):
-            if item.get_title().lower() == book_title.lower():
-                return item
+        for book in self._book_collection:
+            if book.get_book().get_title().lower() == book_title.lower():
+                return book

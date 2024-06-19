@@ -29,7 +29,7 @@ class LibraryManager:
         self._library = library
     
     def set_person(self, person):
-        self._person = person
+        self._person.append(person)
 
     def get_library(self):
         return self._library
@@ -55,9 +55,10 @@ class LibraryManager:
         
         loan_person_name = input("Enter your name: ").lower()
         book_loanc = None
-        for book in self._library._book_collection:
-            if book.get_book().get_title().lower() == book_title:
-                book_loanc = book
+        for bookc in self._library.get_book_collection():
+            if bookc.get_book().get_title().lower() == book_title.lower():
+                book_loanc = bookc
+                break
 
         # Check if person exists
         if self.is_person_in_library(loan_person_name.lower()):
@@ -116,10 +117,12 @@ class LibraryManager:
 
 
     # Assumes valid Person and valid Book and Book is available
-    def helper_loan_book(self, book : BookCollection, person : Person):
-        book.set_number_loaned(book.get_number_loaned() + 1)
-        person._loaned_books.append(book.get_book())
+    def helper_loan_book(self, bookc : BookCollection, person : Person):
+        self._library.loan_book(bookc, person)
+        p_pos = self.get_person_position(person.get_name())
+        self._person[p_pos].add_book(bookc.get_book())
         return True
+        
     
     def search_library(self, search_term, search_option = "t"):
         result_list = None
@@ -199,3 +202,15 @@ class LibraryManager:
     def print_loaner_list(self):
         #print(self._person)
         PrintOut.print_loaned_books(self._person)
+        
+    # Assumes valid loan for a person
+    def return_loaned_book(self, person : Person , book : BookCollection):
+        self._library.return_book(book, person)
+        p_pos = self.get_person_position(person.get_name())
+        self._person[p_pos].remove_book(book.get_book())
+
+    def get_person_position(self, person_name):
+        for number in range(len(self._person)):
+            if self._person[number].get_name().lower() == person_name.lower():
+                return number
+        else: return False
